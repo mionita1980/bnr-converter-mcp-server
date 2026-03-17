@@ -1,6 +1,6 @@
 [project]
 name = "bnr-converter"
-version = "0.1.4"
+version = "0.1.5"
 description = "MCP server for converting foreign currency amounts to RON (Romanian New Leu) using the rates published by BNR (Banca Nationala a Romaniei)"
 authors = [
     { name = "Mihai Ionita", email = "mionita1980@proton.me" }
