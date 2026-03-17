@@ -1,0 +1,4 @@
+fastmcp==2.14.5
+starlette==0.52.1
+uvicorn==0.40.0
+requests==2.32.5
