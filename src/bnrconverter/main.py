@@ -1,5 +1,5 @@
-#!/usr/bin/env python
 #A MCP server offering conversions to RON, using the exchange rates from https://curs.bnr.ro/
+
 from urllib.request import urlopen
 import mcp.server.fastmcp
 import logging
@@ -8,15 +8,15 @@ from datetime import date
 from decimal import Decimal
 import xml.etree.ElementTree as ET
 
-
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO, force=True)
 logger = logging.getLogger(__name__)
-
 
 BNR_NS = "http://www.bnr.ro/xsd"
 BNR_URL_TEMPLATE = "https://curs.bnr.ro/files/xml/years/nbrfxrates{year}.xml"
 
-mymcp = mcp.server.fastmcp.FastMCP("BNRServer")
+mymcp = mcp.server.fastmcp.FastMCP(
+    "BNRServer"
+)
 
 def _fetch_rates_for_year(year: int) -> list[tuple[date, dict[str, tuple[float, float]]]]:
     """Fetch and parse BNR exchange rates for a given year.
@@ -91,7 +91,7 @@ def _find_last_rate_before_bill_date(bill_date: date, currency: str) -> tuple[da
         logger.debug(f"Returning rate: {best_rate} from date: {best_date}")
         return (best_date, best_rate)
 
-    logger.debug(f"No BNR rate found for bill date: {bill_date} and currency: {currency}")
+    logger.info(f"No BNR rate found for bill date: {bill_date} and currency: {currency}")
     raise ValueError(
         f"No BNR rate found for {currency} on or before {bill_date.isoformat()}"
     )
@@ -131,7 +131,7 @@ def _find_last_rate_on_or_before_bill_date(bill_date: date, currency: str) -> tu
         logger.debug(f"Returning rate: {best_rate} from date: {best_date}")
         return (best_date, best_rate)
 
-    logger.debug(f"No BNR rate found for bill date: {bill_date} and currency: {currency}")
+    logger.info(f"No BNR rate found for bill date: {bill_date} and currency: {currency}")
     raise ValueError(
         f"No BNR rate found for {currency} on or before {bill_date.isoformat()}"
     )
@@ -147,7 +147,7 @@ def _convert_bill_to_RON_using_last_rate_before_bill_date(bill_amount: float, bi
     rate_date, rate_value = _find_last_rate_before_bill_date(bill_date, currency)
     amount_in_ron = float(Decimal(str(bill_amount)) * Decimal(str(rate_value)))
     description = f"Converted {bill_amount} {currency} to {amount_in_ron} RON using rate {rate_value} from {rate_date}"
-    logger.debug(description)
+    logger.info(description)
     return (amount_in_ron, description)
 
 @mymcp.tool()
@@ -160,7 +160,7 @@ def _convert_bill_to_RON_using_last_rate_on_or_before_bill_date(bill_amount: flo
     rate_date, rate_value = _find_last_rate_on_or_before_bill_date(bill_date, currency)
     amount_in_ron = float(Decimal(str(bill_amount)) * Decimal(str(rate_value)))
     description = f"Converted {bill_amount} {currency} to {amount_in_ron} RON using rate {rate_value} from {rate_date}"
-    logger.debug(description)
+    logger.info(description)
     return (amount_in_ron, description)
 
 def main():
