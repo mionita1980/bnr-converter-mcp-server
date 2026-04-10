@@ -18,12 +18,21 @@ BNR_URL_TEMPLATE = "https://curs.bnr.ro/files/xml/years/nbrfxrates{year}.xml"
 
 mymcp = mcp.server.fastmcp.FastMCP("BNRServer")
 
-@lru_cache(maxsize=16)
 def _fetch_rates_for_year(year: int) -> list[tuple[date, dict[str, tuple[float, float]]]]:
     """Fetch and parse BNR exchange rates for a given year.
 
     Returns a sorted list of (date, {currency: (rate, multiplier)}) tuples.
+    Current year is never cached; past years are cached via _fetch_rates_for_past_year.
     """
+    if year == date.today().year:
+        return _fetch_rates_uncached(year)
+    return _fetch_rates_cached(year)
+
+@lru_cache(maxsize=16)
+def _fetch_rates_cached(year: int) -> list[tuple[date, dict[str, tuple[float, float]]]]:
+    return _fetch_rates_uncached(year)
+
+def _fetch_rates_uncached(year: int) -> list[tuple[date, dict[str, tuple[float, float]]]]:
     url = BNR_URL_TEMPLATE.format(year=year)
     with urlopen(url, timeout=30) as resp:
         tree = ET.parse(resp)

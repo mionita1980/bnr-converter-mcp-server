@@ -29,9 +29,9 @@ uvx bnr-converter
 Response:
 
 ```
-30 EUR = 149.304 RON
+30 EUR = 149.319 RON
 
-  - BNR exchange rate used: 4.9768 RON/EUR
+  - BNR exchange rate used: 4.9773 RON/EUR
   - Rate date: March 14, 2025 (last published rate before the bill date)
 ```
 

@@ -1,17 +1,17 @@
 [project]
 name = "bnr-converter"
-version = "0.1.5"
+version = "0.1.6"
 description = "MCP server for converting foreign currency amounts to RON (Romanian New Leu) using the rates published by BNR (Banca Nationala a Romaniei)"
 authors = [
     { name = "Mihai Ionita", email = "mionita1980@proton.me" }
 ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.14"
 dependencies = [
- "fastmcp>=2.14.5",
- "starlette>=0.52.1",
- "uvicorn>=0.40.0",
- "requests>=2.32.5",
+ "fastmcp>=3.2.3",
+ "starlette>=1.0.0",
+ "uvicorn>=0.44.0",
+ "requests>=2.33.1",
 ]
 
 [project.urls]
